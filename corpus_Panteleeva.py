@@ -97,19 +97,29 @@ def makingdirs(year_txt, month_txt, author_txt, header_txt, created_txt, topic_t
     filew.write('@au %s\n@ti %s\n@da %s\n@topic %s\n@url %s\n' % (author_txt, header_txt, created_txt, topic_txt, source_txt) + article_txt)
     filew.close()
 
-def mystem1(year_txt, month_txt, path, pathstem1):
+def mystem1(year_txt, month_txt, path2, pathstem1):
     if not os.path.exists('D:\\corpus\\mystem1\\' + year_txt + '\\' + month_txt):
         os.makedirs('D:\\corpus\\mystem1\\' + year_txt + '\\' + month_txt)
-    os.system('D:\\mystem.exe -cdi ' + path  + ' ' + pathstem1)
+    os.system('D:\\mystem.exe -cdi --format xml ' + path2  + ' ' + pathstem1)
 
 def mystem2(year_txt, month_txt, path, pathstem2):
     if not os.path.exists('D:\\corpus\\mystem2\\' + year_txt + '\\' + month_txt):
         os.makedirs('D:\\corpus\\mystem2\\' + year_txt + '\\' + month_txt)
-    os.system('D:\\mystem.exe -cdi --format xml ' + path  + ' ' + pathstem2)
+    os.system('D:\\mystem.exe -cdi ' + path  + ' ' + pathstem2)
+
+def deleteinfo(pathstem2): 
+    filedel = open(pathstem2, "r", encoding = "utf-8") 
+    list_of_lines = filedel.readlines() 
+    filedel.close()
+    list_of_lines[0:5] = ''
+    text_new = ''.join(list_of_lines) 
+    filedel = open (pathstem2, "w", encoding = "utf-8") 
+    filedel.write(text_new) 
+    filedel.close
 
 def main():
     common_in_pages = 'http://oktyabrsel.ru/?p='
-    for i in range(1,256):
+    for i in range(1,20):
         page_site = common_in_pages + str(i)
         html = download_page(page_site)
         if html != '':
@@ -126,8 +136,10 @@ def main():
             table(path, author_txt, header_txt, created_txt, topic_txt, source_txt, year_txt)
             pathstem1 = 'D:\\corpus\\mystem1\\' + year_txt + '\\' + month_txt + '\\' + str(i) + '.xml'
             pathstem2 = 'D:\\corpus\\mystem2\\' + year_txt + '\\' + month_txt + '\\' + str(i) + '.txt'
-            mystem1(year_txt, month_txt, path, pathstem1)
+            path2 = 'D:\\corpus\\mystem2\\' + year_txt + '\\' + month_txt + '\\' + str(i) + '.txt'
             mystem2(year_txt, month_txt, path, pathstem2)
+            deleteinfo(pathstem2)
+            mystem1(year_txt, month_txt, path2, pathstem1)
 
 if __name__ == "__main__":
     main()
