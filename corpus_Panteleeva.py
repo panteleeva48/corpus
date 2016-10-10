@@ -82,6 +82,8 @@ def cleaning(text):
     clean_t = regScript.sub("", text)
     clean_t = regComment.sub("", clean_t)
     clean_t = regTag.sub("", clean_t)
+    clean_t = re.sub('[\t]*', '', clean_t)
+    clean_t = re.sub('\n[ ]*', '\n', clean_t)
     return clean_t
 
 def table(path, author_txt, header_txt, created_txt, topic_txt, source_txt, year_txt):
@@ -119,7 +121,7 @@ def deleteinfo(pathstem2):
 
 def main():
     common_in_pages = 'http://oktyabrsel.ru/?p='
-    for i in range(1,20):
+    for i in range(1,262):
         page_site = common_in_pages + str(i)
         html = download_page(page_site)
         if html != '':
