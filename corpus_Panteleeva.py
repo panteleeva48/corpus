@@ -10,6 +10,7 @@ def download_page(page_site):
     except:
         print('Error at', page_site)
         text = ''
+        
     return text
 
 def article(text):
@@ -34,7 +35,7 @@ def header(text):
     header_txt = header_txt.replace('&#171;', '«')
     header_txt = header_txt.replace('&#187;', '»')
     header_txt = header_txt.replace('&#215;', '×')  
-    print(header_txt)
+#    print(header_txt)
     return header_txt
 
 def created(text):
@@ -42,7 +43,7 @@ def created(text):
     created_list = re.findall(reg_created, text, flags = re.DOTALL)
     created_txt = ''.join(created_list)
     if created_txt == '':
-        created_txt = 'Nodate'
+        created_txt = ''
     return created_txt
 
 def topic(text):
@@ -50,7 +51,7 @@ def topic(text):
     topic_list = re.findall(reg_topic, text, flags = re.DOTALL)
     topic_txt = ''.join(topic_list)
     if topic_txt == '':
-        topic_txt = 'Notopic'
+        topic_txt = ''
     return topic_txt
 
 def source(text):
@@ -64,7 +65,7 @@ def year(created_txt):
     year_list = re.findall(reg_year, created_txt, flags = re.DOTALL)
     year_txt = ''.join(year_list)
     if year_txt == '':
-        year_txt = 'Noyear'
+        year_txt = 'Nodate'
     return year_txt
 
 def month(created_txt):
@@ -72,7 +73,7 @@ def month(created_txt):
     month_list = re.findall(reg_month, created_txt, flags = re.DOTALL)
     month_txt = ''.join(month_list)
     if month_txt == '':
-        month_txt = 'Nomonth'
+        month_txt = ''
     return month_txt
 
 def cleaning(text):
@@ -82,13 +83,15 @@ def cleaning(text):
     clean_t = regScript.sub("", text)
     clean_t = regComment.sub("", clean_t)
     clean_t = regTag.sub("", clean_t)
-    clean_t = re.sub('[\t]*', '', clean_t)
-    clean_t = re.sub('\n[ ]*', '\n', clean_t)
+    clean_t = re.sub('[\t]*', '', clean_t)#чистка от всякой ненужной табуляции
+    clean_t = re.sub('\n[ ]*', '\n', clean_t)#чистка от лишних пробелов
+    clean_t = re.sub('\r\n', '\n', clean_t)#переделка пустых строк в один формат
+    clean_t = re.sub('(\n)\n(\n|)', '\1\2', clean_t)#удаление пустых строк
     return clean_t
 
 def table(path, author_txt, header_txt, created_txt, topic_txt, source_txt, year_txt):
     f = open('D:\\corpus\\metadata.csv', 'a', encoding = 'UTF-8')
-    row = '%s\t%s\t\t\t%s\t%s\tпублицистика\t\t\t%s\t\tнейтральный\tн-возраст\tн-уровень\tрайонная(если районная)\t%s\tназвание газеты\t\t%s\tгазета\tРоссия\tкакой-то регион\tru\n'
+    row = '%s\t%s\t\t\t%s\t%s\tпублицистика\t\t\t%s\t\tнейтральный\tн-возраст\tн-уровень\tрайонная\t%s\t"Октябрь"\t\t%s\tгазета\tРоссия\tСелтинский район\tru\n'
     file = f.write (row % (path, author_txt, header_txt, created_txt, topic_txt, source_txt, year_txt))
     f.close()
 
