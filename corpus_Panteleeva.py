@@ -1,6 +1,7 @@
 import urllib.request
 import re
 import os
+import shutil
 
 def download_page(page_site):
     try:
@@ -124,7 +125,7 @@ def deleteinfo(pathstem2):
 
 def main():
     common_in_pages = 'http://oktyabrsel.ru/?p='
-    for i in range(1,262):
+    for i in range(1,263):
         page_site = common_in_pages + str(i)
         html = download_page(page_site)
         if html != '':
@@ -146,5 +147,6 @@ def main():
             deleteinfo(pathstem2)
             mystem1(year_txt, month_txt, path2, pathstem1)
 
+            
 if __name__ == "__main__":
     main()
