@@ -1,7 +1,6 @@
 import urllib.request
 import re
 import os
-import shutil
 
 def download_page(page_site):
     try:
