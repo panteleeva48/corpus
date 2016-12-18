@@ -104,7 +104,7 @@ def createanalyse():
     for el in form_lemma_list:
         form = el[0]
         lemma = el[1]
-        string = string + 'insert into analyse(form,lemma) values ("%s","%s");' %(form,lemma)
+        string = string + 'insert into analyse(id,form,lemma) values ("%s","%s","%s");' %(str(k),form,lemma)
         k += 1
     writefile('analyse.txt',string)
     return string
@@ -132,7 +132,7 @@ def alltables():
         word = x[0].lower()
         i = 1
         for y in analyse:
-            if word == y[0]:
+            if word == y[1]:
                 x = x.append(i)
             i += 1
     str_base = ''
