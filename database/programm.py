@@ -16,6 +16,7 @@ def listing():
     fr = re.sub(r'\n- ([а-яА-ЯЁёa-zA-Z])',r'\n-\1',fr)
     fr = re.sub(r'([а-яА-ЯЁёa-zA-Z]) - ([а-яА-ЯЁёa-zA-Z])',r'\1- -\2',fr)
     fr = re.sub(r'([\W]) - ([а-яА-ЯЁёa-zA-Z])',r'\1- -\2',fr)
+    fr = re.sub(r'\)([\W])',r'\) \1',fr)
     list_words = fr.split()
 #    print(list_words)
     return list_words
@@ -84,10 +85,10 @@ def mystem():
 def list_lemms():
     fr = file('form_lemma.txt')
     fr = re.sub(r'\?\?',r'',fr)
-    print(fr)
+#    print(fr)
     whole_phrase = re.findall("[a-zA-Zа-яё-]+{[a-zа-яё|-]+}", fr, flags=re.DOTALL)
     whole_phrase = list(set(whole_phrase))
-    print(whole_phrase)
+#    print(whole_phrase)
     form_lemma_list = []
     for el in whole_phrase:
         form = re.findall("([а-яёa-zA-Z-]+){[а-яёa-z|-]+}", el, flags=re.DOTALL)
@@ -99,7 +100,7 @@ def createanalyse():
     form_lemma_list = list_lemms()
     string = ''
     k = 1
-    print(form_lemma_list)
+#    print(form_lemma_list)
     for el in form_lemma_list:
         form = el[0]
         lemma = el[1]
@@ -120,12 +121,13 @@ def mass(mas):
 def alltables():
     one = createbase()
     two = createanalyse()
+#    print(one)
     first = re.findall('\(".+?\)', one, flags=re.DOTALL)
     second = re.findall('\(".+?\)', two, flags=re.DOTALL)
     base = mass(first)
     analyse = mass(second)
 #    print(base)
-    print(analyse)
+#    print(analyse)
     for x in base:
         word = x[0].lower()
         i = 1
@@ -136,8 +138,12 @@ def alltables():
     str_base = ''
     for el in base:
 #        print(el)
-        str_base = str_base + 'insert into base(form,punct_left,punct_right,num_text,id_analyse)\
- values ("%s","%s","%s","%s","%s");' %(el[0],el[1],el[2],el[3],el[5])
+        if len(el) == 6:
+            str_base = str_base + "insert into base(form,punct_left,punct_right,num_text,id_analyse)\
+ values ('%s','%s','%s','%s','%s');" %(el[0],el[1],el[2],el[3],el[5])
+        else:
+            str_base = str_base + "insert into base(form,punct_left,punct_right,num_text,id_analyse)\
+ values ('%s','%s','%s','%s','%s');" %(el[0],el[1],el[2],el[3],str(0))
     return str_base
 
 def onefile():
