@@ -13,9 +13,9 @@ def writefile(namefile,result):
 
 def listing():
     fr = file('text.txt')
-    fr = re.sub(r'\n- ([а-яА-ЯЁё])',r'\n-\1',fr)
-    fr = re.sub(r'([а-яА-ЯЁё]) - ([а-яА-ЯЁё])',r'\1- -\2',fr)
-    fr = re.sub(r'([\W]) - ([а-яА-ЯЁё])',r'\1- -\2',fr)
+    fr = re.sub(r'\n- ([а-яА-ЯЁёa-zA-Z])',r'\n-\1',fr)
+    fr = re.sub(r'([а-яА-ЯЁёa-zA-Z]) - ([а-яА-ЯЁёa-zA-Z])',r'\1- -\2',fr)
+    fr = re.sub(r'([\W]) - ([а-яА-ЯЁёa-zA-Z])',r'\1- -\2',fr)
     list_words = fr.split()
 #    print(list_words)
     return list_words
@@ -46,7 +46,7 @@ def createbase():
             punct_right = ''
 #            print(punct_left + '&' + form + '&' + punct_right)
         elif len(el) == 2:
-            sign = re.findall(r'[а-яА-ЯЁё]+',el[0])
+            sign = re.findall(r'[а-яА-ЯЁёa-zA-Z]+',el[0])
             if len(sign) > 0:# если сначала слово, потом - знак препинания
                 form = el[0]
                 punct_left = ''
@@ -83,12 +83,15 @@ def mystem():
 
 def list_lemms():
     fr = file('form_lemma.txt')
-    whole_phrase = re.findall("[а-яё-]+{[а-яё|-]+}", fr, flags=re.DOTALL)
+    fr = re.sub(r'\?\?',r'',fr)
+    print(fr)
+    whole_phrase = re.findall("[a-zA-Zа-яё-]+{[a-zа-яё|-]+}", fr, flags=re.DOTALL)
     whole_phrase = list(set(whole_phrase))
+    print(whole_phrase)
     form_lemma_list = []
     for el in whole_phrase:
-        form = re.findall("([а-яё-]+){[а-яё|-]+}", el, flags=re.DOTALL)
-        lemma = re.findall("[а-яё-]+{([а-яё|-]+)}", el, flags=re.DOTALL)
+        form = re.findall("([а-яёa-zA-Z-]+){[а-яёa-z|-]+}", el, flags=re.DOTALL)
+        lemma = re.findall("[а-яёa-zA-Z-]+{([а-яёa-z|-]+)}", el, flags=re.DOTALL)
         form_lemma_list.append(form + lemma)
     return form_lemma_list
 
@@ -96,7 +99,7 @@ def createanalyse():
     form_lemma_list = list_lemms()
     string = ''
     k = 1
-#    print(form_lemma_list)
+    print(form_lemma_list)
     for el in form_lemma_list:
         form = el[0]
         lemma = el[1]
@@ -121,6 +124,8 @@ def alltables():
     second = re.findall('\(".+?\)', two, flags=re.DOTALL)
     base = mass(first)
     analyse = mass(second)
+#    print(base)
+    print(analyse)
     for x in base:
         word = x[0].lower()
         i = 1
