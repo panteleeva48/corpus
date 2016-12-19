@@ -97,15 +97,16 @@ def list_lemms():
         if '{' not in j:
             j = '%s{%s}' %(j,j)
         str_j = str_j + '\n' + j
+        str_j = re.sub(r'([a-zA-Zа-яА-ЯёЁ]+){([a-zA-Zа-яА-ЯёЁ]+)}\-([a-zA-Zа-яА-ЯёЁ]+){([a-zA-Zа-яА-ЯёЁ]+)}',r'\1-\3{\2;\4}',str_j)######
     writefile('form_lemma.txt',str_j)
     find = file('form_lemma.txt')
-    whole_phrase = re.findall("[a-zA-Zа-яё0-9-]+{[a-zа-яё0-9|-]+}", find, flags=re.DOTALL)
+    whole_phrase = re.findall("[a-zA-Zа-яёЁ0-9-]+{[a-zа-яёЁ0-9;\-]+}", find, flags=re.DOTALL)###
     whole_phrase = list(set(whole_phrase))
 #    print(whole_phrase)
     form_lemma_list = []
     for el in whole_phrase:
-        form = re.findall("([а-яёa-zA-Z0-9-]+){[а-яёa-z0-9|-]+}", el, flags=re.DOTALL)
-        lemma = re.findall("[а-яёa-zA-Z0-9-]+{([а-яёa-z0-9|-]+)}", el, flags=re.DOTALL)
+        form = re.findall("([а-яёЁa-zA-Z0-9-]+){[а-яёЁa-z0-9;\-]+}", el, flags=re.DOTALL)###
+        lemma = re.findall("[а-яёЁa-zA-Z0-9-]+{([а-яёЁa-z0-9;\-]+)}", el, flags=re.DOTALL)###
         form_lemma_list.append(form + lemma)
     return form_lemma_list
 
