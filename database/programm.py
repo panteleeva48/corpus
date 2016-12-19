@@ -13,6 +13,8 @@ def writefile(namefile,result):
 
 def listing():
     fr = file('text.txt')
+#    print(fr)
+    fr = re.sub(r'—',r'-',fr)
     fr = re.sub(r'\n- ([а-яА-ЯЁёa-zA-Z])',r'\n-\1',fr)
     fr = re.sub(r'([а-яА-ЯЁёa-zA-Z]) - ([а-яА-ЯЁёa-zA-Z])',r'\1- -\2',fr)
     fr = re.sub(r'([\W]) - ([а-яА-ЯЁёa-zA-Z])',r'\1- -\2',fr)
@@ -38,6 +40,7 @@ def list_punct():
 
 def createbase():
     list_list = list_punct()
+#    print(list_list)
     string = ''
     num_text = 1
     for el in list_list:
@@ -47,8 +50,9 @@ def createbase():
             punct_right = ''
 #            print(punct_left + '&' + form + '&' + punct_right)
         elif len(el) == 2:
-            sign = re.findall(r'[а-яА-ЯЁёa-zA-Z]+',el[0])
-            if len(sign) > 0:# если сначала слово, потом - знак препинания
+            sign = re.findall(r'[а-яА-ЯЁёa-zA-Z0-9]+',el[0])
+#            print(sign)
+            if len(sign) == 1:# если сначала слово, потом - знак препинания
                 form = el[0]
                 punct_left = ''
                 punct_right = el[1]
@@ -62,7 +66,7 @@ def createbase():
             form = el[1]
             punct_left = el[0]
             punct_right = el[2]
-#            print(punct_left + '&' + form + '&' + punct_right)
+#        print(punct_left + '&' + form + '&' + punct_right)
         string = string + 'insert into base(form,punct_left,punct_right,num_text,id_analyse)\
  values ("%s","%s","%s","%s","0");' %(form,punct_left,punct_right,num_text)
         num_text += 1
@@ -77,6 +81,7 @@ def analyse():
         word = word.lower()
         word = word.strip(" .,()[];:?!«»{}-")
         str_form = str_form + word + '\n'
+#    print(str_form)
     writefile('forms.txt',str_form)
 
 def mystem():
@@ -85,14 +90,22 @@ def mystem():
 def list_lemms():
     fr = file('form_lemma.txt')
     fr = re.sub(r'\?\?',r'',fr)
-#    print(fr)
-    whole_phrase = re.findall("[a-zA-Zа-яё-]+{[a-zа-яё|-]+}", fr, flags=re.DOTALL)
+    fr = re.sub(r'\?',r'',fr)
+    fr = fr.split('\n')
+    str_j = ''
+    for j in fr:
+        if '{' not in j:
+            j = '%s{%s}' %(j,j)
+        str_j = str_j + '\n' + j
+    writefile('form_lemma.txt',str_j)
+    find = file('form_lemma.txt')
+    whole_phrase = re.findall("[a-zA-Zа-яё0-9-]+{[a-zа-яё0-9|-]+}", find, flags=re.DOTALL)
     whole_phrase = list(set(whole_phrase))
 #    print(whole_phrase)
     form_lemma_list = []
     for el in whole_phrase:
-        form = re.findall("([а-яёa-zA-Z-]+){[а-яёa-z|-]+}", el, flags=re.DOTALL)
-        lemma = re.findall("[а-яёa-zA-Z-]+{([а-яёa-z|-]+)}", el, flags=re.DOTALL)
+        form = re.findall("([а-яёa-zA-Z0-9-]+){[а-яёa-z0-9|-]+}", el, flags=re.DOTALL)
+        lemma = re.findall("[а-яёa-zA-Z0-9-]+{([а-яёa-z0-9|-]+)}", el, flags=re.DOTALL)
         form_lemma_list.append(form + lemma)
     return form_lemma_list
 
@@ -137,7 +150,6 @@ def alltables():
             i += 1
     str_base = ''
     for el in base:
-#        print(el)
         if len(el) == 6:
             str_base = str_base + "insert into base(form,punct_left,punct_right,num_text,id_analyse)\
  values ('%s','%s','%s','%s','%s');" %(el[0],el[1],el[2],el[3],el[5])
