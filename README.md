@@ -10,3 +10,5 @@ https://github.com/panteleeva48/third.git
 https://github.com/panteleeva48/third.git
 # ВОТ ТУТ ЗАДАНИЕ ПО ГРАФИКАМ И ВК
 https://github.com/panteleeva48/relation_vk
+# ВОТ ТУТ ЗАДАНИЕ ПО БОТАМ
+https://github.com/panteleeva48/bot
